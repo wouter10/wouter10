@@ -13,6 +13,10 @@ function route() {
     case "nu":
       app.innerHTML = renderShell(renderNu(), false);
       break;
+    case "kaart":
+      app.innerHTML = renderShell(renderKaart(), false);
+      initKaart();
+      return; // geen scrollTo — kaart heeft volledige hoogte nodig
     case "locatie":
       app.innerHTML = renderShell(renderLocatieDetail(parts[1], parts[2] || "info"), true);
       break;
@@ -112,6 +116,10 @@ function renderShell(inhoud, isDetail) {
       <a href="#nu" class="nav-item ${hash === "nu" ? "actief" : ""}">
         <span class="nav-icoon">📍</span>
         <span class="nav-label">Nu</span>
+      </a>
+      <a href="#kaart" class="nav-item ${hash === "kaart" ? "actief" : ""}">
+        <span class="nav-icoon">🗺️</span>
+        <span class="nav-label">Kaart</span>
       </a>
     </nav>
   `;
@@ -430,4 +438,76 @@ function renderRestaurantsTab(loc) {
   });
 
   return `<div class="restaurants-lijst">${html}</div>`;
+}
+
+// ─── Kaart ────────────────────────────────────────────────────────────────────
+
+function renderKaart() {
+  return `<div id="kaart-map"></div>`;
+}
+
+function initKaart() {
+  const map = L.map("kaart-map", { zoomControl: true });
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap",
+    maxZoom: 18,
+  }).addTo(map);
+
+  const coords = REIS.locaties.map((l) => [l.coordinaten.lat, l.coordinaten.lng]);
+
+  // Stippellijn langs alle stops
+  L.polyline(coords, {
+    color: "#00796b",
+    weight: 3,
+    dashArray: "8, 12",
+    opacity: 0.85,
+  }).addTo(map);
+
+  // Markers per locatie
+  REIS.locaties.forEach((loc, i) => {
+    const status = locatieStatus(loc);
+    const vulKleur = status === "huidig" ? "#2E7D32" : status === "verleden" ? "#9E9E9E" : "#00796b";
+    const randKleur = status === "huidig" ? "#fff" : "#fff";
+
+    const marker = L.circleMarker([loc.coordinaten.lat, loc.coordinaten.lng], {
+      radius: 11,
+      fillColor: vulKleur,
+      color: randKleur,
+      weight: 2.5,
+      opacity: 1,
+      fillOpacity: 1,
+    }).addTo(map);
+
+    // Nummer in de marker via tooltip die altijd zichtbaar is
+    const nrLabel = L.divIcon({
+      className: "kaart-nr-label",
+      html: `<span>${i + 1}</span>`,
+      iconSize: [22, 22],
+      iconAnchor: [11, 11],
+    });
+    L.marker([loc.coordinaten.lat, loc.coordinaten.lng], { icon: nrLabel, interactive: false }).addTo(map);
+
+    marker.bindPopup(
+      `<div class="kaart-popup">
+        <strong>${loc.emoji} ${loc.stad}</strong><br>
+        <span>${loc.hotel.naam}</span><br>
+        <span class="kaart-popup-datums">${formatDatum(loc.datums.aankomst)} → ${formatDatum(loc.datums.vertrek)}</span>
+      </div>`,
+      { maxWidth: 200 }
+    );
+
+    marker.on("click", () => {
+      marker.openPopup();
+    });
+
+    // Knop in popup om naar detail te gaan
+    marker.on("popupopen", () => {
+      const btn = document.querySelector(".kaart-popup-link");
+      if (btn) btn.onclick = () => { location.hash = `#locatie/${loc.id}`; };
+    });
+  });
+
+  // Zoom zodat alle stops zichtbaar zijn
+  map.fitBounds(coords, { padding: [24, 24] });
 }
