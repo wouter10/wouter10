@@ -19,6 +19,10 @@ function route() {
       return; // geen scrollTo — kaart heeft volledige hoogte nodig
     case "locatie":
       app.innerHTML = renderShell(renderLocatieDetail(parts[1], parts[2] || "info"), true);
+      if ((parts[2] || "info") === "lokalekaart") {
+        initLokaleKaart(getLocatie(parts[1]));
+        return;
+      }
       break;
     default:
       app.innerHTML = renderShell(renderTijdlijn(), false);
@@ -238,6 +242,7 @@ function renderLocatieDetail(id, tab) {
     { id: "info", label: "🏨 Hotel & Reis" },
     { id: "activiteiten", label: "🗺️ Activiteiten" },
     { id: "restaurants", label: "🍽️ Restaurants" },
+    { id: "lokalekaart", label: "📍 Kaart" },
   ];
 
   const tabNav = `
@@ -248,6 +253,7 @@ function renderLocatieDetail(id, tab) {
   let tabInhoud = "";
   if (tab === "activiteiten") tabInhoud = renderActiviteitenTab(loc);
   else if (tab === "restaurants") tabInhoud = renderRestaurantsTab(loc);
+  else if (tab === "lokalekaart") tabInhoud = renderLokaleKaart(loc);
   else tabInhoud = renderInfoTab(loc);
 
   return `
@@ -373,6 +379,7 @@ function renderActiviteitenTab(loc) {
               ${act.kosten ? `<span class="chip">💰 ${act.kosten}</span>` : ""}
             </div>
             ${act.tip ? `<p class="act-tip">${act.tip}</p>` : ""}
+            ${act.meenemen?.length ? `<p class="act-meenemen">🎒 <strong>Neem mee:</strong> ${act.meenemen.join(" · ")}</p>` : ""}
             ${act.mapsUrl ? `<a href="${act.mapsUrl}" target="_blank" class="knop-kaart klein">📍 Open in Maps</a>` : ""}
           </div>
         </div>`
@@ -383,40 +390,35 @@ function renderActiviteitenTab(loc) {
 
 // ─── Restaurants tab ──────────────────────────────────────────────────────────
 
-const SFEER_ICOON = {
-  "fine dining": "👨‍🍳",
-  authentiek: "🥘",
-  lokaal: "🏪",
-  casual: "🍴",
-  historisch: "🏛️",
-  romantisch: "🕯️",
-  overig: "🍴",
+const PRIJS_LABEL = {
+  "€": "€ — Goedkoop",
+  "€€": "€€ — Middel",
+  "€€€": "€€€ — Duurder",
+  "€€€€": "€€€€ — Fine dining",
 };
-
-const SFEER_VOLGORDE = ["fine dining", "romantisch", "authentiek", "lokaal", "historisch", "casual", "overig"];
+const PRIJS_VOLGORDE = ["€", "€€", "€€€", "€€€€"];
 
 function renderRestaurantsTab(loc) {
   if (!loc.restaurants?.length) return `<p class="leeg">Nog geen restaurants toegevoegd.</p>`;
 
   const groepen = {};
   loc.restaurants.forEach((r) => {
-    const sfeer = r.sfeer || "overig";
-    (groepen[sfeer] = groepen[sfeer] || []).push(r);
+    const prijs = r.prijsniveau || "€€";
+    (groepen[prijs] = groepen[prijs] || []).push(r);
   });
 
   let html = "";
-  SFEER_VOLGORDE.forEach((sfeer) => {
-    if (!groepen[sfeer]) return;
-    const label = sfeer.charAt(0).toUpperCase() + sfeer.slice(1);
-    html += `<h2 class="rest-categorie">${SFEER_ICOON[sfeer]} ${label}</h2>`;
-    html += groepen[sfeer]
+  PRIJS_VOLGORDE.forEach((prijs) => {
+    if (!groepen[prijs]) return;
+    html += `<h2 class="rest-categorie">${PRIJS_LABEL[prijs]}</h2>`;
+    html += groepen[prijs]
       .map(
         (r) => `
       <div class="restaurant-kaart">
         <div class="rest-top">
           <div>
             <h3 class="rest-naam">${r.naam}</h3>
-            <p class="rest-keuken">${r.keuken}</p>
+            <p class="rest-keuken">${r.keuken} · <span class="rest-sfeer-label">${r.sfeer || ""}</span></p>
           </div>
           <div class="rest-rechts">
             <span class="rest-prijs">${r.prijsniveau}</span>
@@ -424,6 +426,7 @@ function renderRestaurantsTab(loc) {
           </div>
         </div>
         <div class="chips">
+          ${r.afstand ? `<span class="chip chip-afstand">🚶 ${r.afstand}</span>` : ""}
           ${r.reservering ? `<span class="chip chip-waarschuwing">📋 Reservering vereist</span>` : `<span class="chip">Walk-in</span>`}
           ${r.openingstijden ? `<span class="chip">🕐 ${r.openingstijden}</span>` : ""}
         </div>
@@ -510,4 +513,81 @@ function initKaart() {
 
   // Zoom zodat alle stops zichtbaar zijn
   map.fitBounds(coords, { padding: [24, 24] });
+}
+
+// ─── Lokale kaart per locatie ─────────────────────────────────────────────────
+
+function renderLokaleKaart(loc) {
+  return `<div id="lokale-kaart-map"></div>`;
+}
+
+const CATEGORIE_KLEUR = {
+  bezienswaardigheden: "#1565C0",
+  cultuur: "#6A1B9A",
+  natuur: "#2E7D32",
+  avontuur: "#E65100",
+  winkelen: "#AD1457",
+  eten: "#F57F17",
+};
+
+function initLokaleKaart(loc) {
+  if (!loc) return;
+
+  const hotelCoord = loc.hotel?.coordinaten;
+  const centrum = hotelCoord
+    ? [hotelCoord.lat, hotelCoord.lng]
+    : [loc.coordinaten.lat, loc.coordinaten.lng];
+
+  const map = L.map("lokale-kaart-map").setView(centrum, 13);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap",
+    maxZoom: 18,
+  }).addTo(map);
+
+  const allePunten = [];
+
+  // Hotel marker
+  if (hotelCoord) {
+    allePunten.push([hotelCoord.lat, hotelCoord.lng]);
+    const hotelIcon = L.divIcon({
+      className: "lokaal-hotel-icon",
+      html: `<div class="lokaal-marker hotel-marker">🏨</div>`,
+      iconSize: [36, 36],
+      iconAnchor: [18, 18],
+    });
+    L.marker([hotelCoord.lat, hotelCoord.lng], { icon: hotelIcon })
+      .bindPopup(`<div class="kaart-popup"><strong>🏨 ${loc.hotel.naam}</strong><br><span>Check-in: ${loc.hotel.checkIn} · Check-out: ${loc.hotel.checkOut}</span></div>`)
+      .addTo(map);
+  }
+
+  // Activiteiten markers
+  (loc.activiteiten || []).forEach((act) => {
+    if (!act.coordinaten) return;
+    allePunten.push([act.coordinaten.lat, act.coordinaten.lng]);
+    const kleur = CATEGORIE_KLEUR[act.categorie] || "#00796b";
+    const icoon = CATEGORIE_ICOON[act.categorie] || "📌";
+    const actIcon = L.divIcon({
+      className: "lokaal-act-icon",
+      html: `<div class="lokaal-marker act-marker" style="background:${kleur}">${icoon}</div>`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+    });
+    L.marker([act.coordinaten.lat, act.coordinaten.lng], { icon: actIcon })
+      .bindPopup(
+        `<div class="kaart-popup">
+          <strong>${icoon} ${act.naam.replace(/ ⚠️.*/, "")}</strong><br>
+          ${act.duur ? `<span>⏱️ ${act.duur}</span><br>` : ""}
+          ${act.kosten ? `<span>💰 ${act.kosten}</span><br>` : ""}
+          ${act.mapsUrl ? `<a href="${act.mapsUrl}" target="_blank" style="color:#00796b;font-weight:600">📍 Open in Maps</a>` : ""}
+        </div>`,
+        { maxWidth: 220 }
+      )
+      .addTo(map);
+  });
+
+  // Zoom op alle punten
+  if (allePunten.length > 1) {
+    map.fitBounds(allePunten, { padding: [30, 30] });
+  }
 }
