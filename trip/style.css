@@ -87,7 +87,8 @@ a { color: inherit; text-decoration: none; }
   background: var(--oppervlak);
   border-top: 1px solid var(--rand);
   display: flex;
-  z-index: 100;
+  z-index: 1000;
+  pointer-events: auto;
 }
 
 .nav-item {
@@ -643,6 +644,15 @@ a { color: inherit; text-decoration: none; }
   font-size: 12px !important;
   color: #888 !important;
   margin-top: 2px;
+}
+
+.kaart-popup-link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--groen, #00796b);
+  text-decoration: none;
 }
 
 /* ─── Diversen ───────────────────────────────────────────────────────────────── */

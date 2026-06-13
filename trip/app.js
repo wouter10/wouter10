@@ -450,7 +450,7 @@ function renderKaart() {
 }
 
 function initKaart() {
-  const map = L.map("kaart-map", { zoomControl: true });
+  const map = L.map("kaart-map", { zoomControl: true, tap: false });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap",
@@ -495,19 +495,14 @@ function initKaart() {
       `<div class="kaart-popup">
         <strong>${loc.emoji} ${loc.stad}</strong><br>
         <span>${loc.hotel.naam}</span><br>
-        <span class="kaart-popup-datums">${formatDatum(loc.datums.aankomst)} → ${formatDatum(loc.datums.vertrek)}</span>
+        <span class="kaart-popup-datums">${formatDatum(loc.datums.aankomst)} → ${formatDatum(loc.datums.vertrek)}</span><br>
+        <a class="kaart-popup-link" href="#locatie/${loc.id}">Bekijk details →</a>
       </div>`,
-      { maxWidth: 200 }
+      { maxWidth: 220 }
     );
 
     marker.on("click", () => {
       marker.openPopup();
-    });
-
-    // Knop in popup om naar detail te gaan
-    marker.on("popupopen", () => {
-      const btn = document.querySelector(".kaart-popup-link");
-      if (btn) btn.onclick = () => { location.hash = `#locatie/${loc.id}`; };
     });
   });
 
@@ -538,7 +533,7 @@ function initLokaleKaart(loc) {
     ? [hotelCoord.lat, hotelCoord.lng]
     : [loc.coordinaten.lat, loc.coordinaten.lng];
 
-  const map = L.map("lokale-kaart-map").setView(centrum, 13);
+  const map = L.map("lokale-kaart-map", { tap: false }).setView(centrum, 13);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap",
