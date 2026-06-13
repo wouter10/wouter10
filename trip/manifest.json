@@ -1,0 +1,20 @@
+{
+  "name": "Indonesië Reis",
+  "short_name": "Indonesië",
+  "description": "Vakantie reisplanner voor Indonesië",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#00796b",
+  "background_color": "#f5f5f0",
+  "lang": "nl",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
