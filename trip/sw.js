@@ -1,4 +1,4 @@
-const CACHE = "reis-v1";
+const CACHE = "reis-v2";
 const BESTANDEN = ["./", "./index.html", "./style.css", "./app.js", "./data.js", "./manifest.json"];
 
 self.addEventListener("install", (e) => {
