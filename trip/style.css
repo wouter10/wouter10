@@ -547,6 +547,46 @@ a { color: inherit; text-decoration: none; }
   flex-wrap: wrap;
 }
 
+/* ─── Kaart ──────────────────────────────────────────────────────────────────── */
+#kaart-map {
+  height: calc(100vh - var(--header-hoogte) - var(--nav-hoogte) - env(safe-area-inset-bottom, 0px));
+  width: 100%;
+}
+
+.kaart-nr-label {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.kaart-nr-label span {
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+
+.kaart-popup strong {
+  font-size: 15px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.kaart-popup span {
+  font-size: 13px;
+  color: #555;
+  display: block;
+}
+
+.kaart-popup-datums {
+  font-size: 12px !important;
+  color: #888 !important;
+  margin-top: 2px;
+}
+
 /* ─── Diversen ───────────────────────────────────────────────────────────────── */
 .leeg {
   text-align: center;

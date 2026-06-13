@@ -12,6 +12,7 @@ const REIS = {
       land: "Indonesië — Java",
       type: "stad",
       emoji: "🏙️",
+      coordinaten: { lat: -6.2088, lng: 106.8456 },
       datums: {
         aankomst: "2026-08-23",
         vertrek: "2026-08-25",
@@ -140,6 +141,7 @@ const REIS = {
       land: "Indonesië — Java",
       type: "cultuur",
       emoji: "🏯",
+      coordinaten: { lat: -7.7956, lng: 110.3695 },
       datums: {
         aankomst: "2026-08-25",
         vertrek: "2026-08-29",
@@ -281,6 +283,7 @@ const REIS = {
       land: "Indonesië — Oost-Java",
       type: "natuur",
       emoji: "💧",
+      coordinaten: { lat: -7.9839, lng: 112.6214 },
       datums: {
         aankomst: "2026-08-29",
         vertrek: "2026-09-01",
@@ -380,6 +383,7 @@ const REIS = {
       land: "Indonesië — Oost-Java",
       type: "natuur",
       emoji: "🌋",
+      coordinaten: { lat: -7.9425, lng: 112.9530 },
       datums: {
         aankomst: "2026-09-01",
         vertrek: "2026-09-03",
@@ -451,6 +455,7 @@ const REIS = {
       land: "Indonesië — Oost-Java",
       type: "natuur",
       emoji: "🔥",
+      coordinaten: { lat: -8.0631, lng: 114.2333 },
       datums: {
         aankomst: "2026-09-03",
         vertrek: "2026-09-05",
@@ -522,6 +527,7 @@ const REIS = {
       land: "Indonesië — Oost-Java",
       type: "natuur",
       emoji: "☕",
+      coordinaten: { lat: -8.2467, lng: 114.0867 },
       datums: {
         aankomst: "2026-09-05",
         vertrek: "2026-09-07",
@@ -593,6 +599,7 @@ const REIS = {
       land: "Bali",
       type: "natuur",
       emoji: "🌿",
+      coordinaten: { lat: -8.5069, lng: 115.2625 },
       datums: {
         aankomst: "2026-09-07",
         vertrek: "2026-09-11",
@@ -741,6 +748,7 @@ const REIS = {
       land: "Bali",
       type: "strand",
       emoji: "🤿",
+      coordinaten: { lat: -8.6801, lng: 115.4554 },
       datums: {
         aankomst: "2026-09-11",
         vertrek: "2026-09-15",
@@ -853,6 +861,7 @@ const REIS = {
       land: "Bali",
       type: "strand",
       emoji: "🌴",
+      coordinaten: { lat: -8.7183, lng: 115.1686 },
       datums: {
         aankomst: "2026-09-15",
         vertrek: "2026-09-17",
