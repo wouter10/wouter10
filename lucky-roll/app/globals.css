@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Brand colors */
+  --color-brand-50: #fdf4ff;
+  --color-brand-100: #fae8ff;
+  --color-brand-200: #f5d0fe;
+  --color-brand-300: #f0abfc;
+  --color-brand-400: #e879f9;
+  --color-brand-500: #d946ef;
+  --color-brand-600: #c026d3;
+  --color-brand-700: #a21caf;
+  --color-brand-800: #86198f;
+  --color-brand-900: #701a75;
+
+  /* Gold accent */
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+
+  /* Surface colors */
+  --color-surface-0: #ffffff;
+  --color-surface-50: #fafafa;
+  --color-surface-100: #f4f4f5;
+  --color-surface-200: #e4e4e7;
+  --color-surface-800: #27272a;
+  --color-surface-900: #18181b;
+  --color-surface-950: #09090b;
+
+  /* Fonts */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Radius */
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-card-hover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 20px rgb(217 70 239 / 0.3);
+  --shadow-dice: 0 8px 32px rgb(0 0 0 / 0.4);
+}
+
+:root {
+  --background: var(--color-surface-0);
+  --foreground: var(--color-surface-950);
+  --card: var(--color-surface-50);
+  --card-border: var(--color-surface-200);
+  --muted: #71717a;
+}
+
+.dark {
+  --background: var(--color-surface-950);
+  --foreground: #fafafa;
+  --card: var(--color-surface-900);
+  --card-border: var(--color-surface-800);
+  --muted: #a1a1aa;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: var(--color-surface-950);
+    --foreground: #fafafa;
+    --card: var(--color-surface-900);
+    --card-border: var(--color-surface-800);
+    --muted: #a1a1aa;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  height: 100%;
+  /* Safe area for iPhone notch */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  min-height: 100%;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection */
+::selection {
+  background-color: rgb(217 70 239 / 0.2);
+}
+
+/* Dice face dots */
+.dice-dot {
+  background-color: currentColor;
+  border-radius: 50%;
+  width: 18%;
+  height: 18%;
+}
