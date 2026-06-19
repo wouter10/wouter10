@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 import { DiceFace } from "./DiceFace";
 
 interface AnimatedDiceProps {
@@ -10,8 +10,6 @@ interface AnimatedDiceProps {
 }
 
 export function AnimatedDice({ value, rolling, size = 120 }: AnimatedDiceProps) {
-  const controls = useAnimation();
-
   return (
     <motion.div
       animate={
