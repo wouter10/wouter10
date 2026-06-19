@@ -4,6 +4,10 @@ export const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+// Het model voor de AI-chat. Wil je goedkoper? Zet op "claude-haiku-4-5"
+// (snel + goedkoop, ruim voldoende voor CRUD-taken) of "claude-sonnet-4-6".
+export const CHAT_MODEL = "claude-opus-4-8";
+
 export const SYSTEM_PROMPT = `Je bent een behulpzame assistent voor de Lucky Roll app. Lucky Roll helpt gebruikers willekeurig kiezen uit persoonlijke lijsten (films, restaurants, games, etc.) via een dobbelsteenanimatie.
 
 Je kunt de volgende acties uitvoeren via tools:

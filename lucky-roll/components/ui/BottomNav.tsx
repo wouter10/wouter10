@@ -94,7 +94,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-40 bg-[var(--card)]/90 backdrop-blur-xl border-t border-[var(--card-border)] pb-[env(safe-area-inset-bottom)]">
+    <nav className="shrink-0 z-40 bg-[var(--card)]/90 backdrop-blur-xl border-t border-[var(--card-border)] pb-[env(safe-area-inset-bottom)]">
       <div className="flex items-stretch h-14">
         {tabs.map((tab) => {
           const active =

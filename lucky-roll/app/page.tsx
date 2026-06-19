@@ -65,7 +65,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col h-full">
-      <main className="flex-1 overflow-y-auto pb-[calc(3.5rem+env(safe-area-inset-bottom))]">
+      <main className="flex-1 min-h-0 overflow-y-auto">
         <div className="flex flex-col items-center px-6 pt-10 pb-6 min-h-full">
 
           {/* Header */}
