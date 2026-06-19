@@ -67,27 +67,6 @@ const tabs = [
       </svg>
     ),
   },
-  {
-    href: "/chat",
-    label: "Chat",
-    icon: (active: boolean) => (
-      <svg
-        viewBox="0 0 24 24"
-        fill={active ? "currentColor" : "none"}
-        stroke="currentColor"
-        strokeWidth={active ? 0 : 1.8}
-        className="w-6 h-6"
-      >
-        <path d="M20 2H4a2 2 0 00-2 2v12a2 2 0 002 2h4l4 4 4-4h4a2 2 0 002-2V4a2 2 0 00-2-2z" />
-        <path
-          d="M8 10h8M8 14h5"
-          stroke={active ? "white" : "currentColor"}
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
-  },
 ];
 
 export function BottomNav() {
