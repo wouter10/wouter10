@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { BottomNav } from "@/components/ui/BottomNav";
 import { Button } from "@/components/ui/Button";
+import { SettingsButton } from "@/components/ui/SettingsButton";
 import { AnimatedDice } from "@/components/dice/AnimatedDice";
 import { useRoll } from "@/lib/hooks/useRoll";
 import type { Category, HistoryEntry } from "@/types";
@@ -69,9 +70,12 @@ export default function HomePage() {
         <div className="flex flex-col items-center px-6 pt-10 pb-6 min-h-full">
 
           {/* Header */}
-          <div className="w-full mb-6">
-            <h1 className="text-2xl font-bold">Lucky Roll</h1>
-            <p className="text-[var(--muted)] text-sm mt-0.5">Gooi de dobbelstenen</p>
+          <div className="w-full mb-6 flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Lucky Roll</h1>
+              <p className="text-[var(--muted)] text-sm mt-0.5">Gooi de dobbelstenen</p>
+            </div>
+            <SettingsButton />
           </div>
 
           {/* Category Picker */}
